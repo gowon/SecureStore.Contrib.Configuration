@@ -16,4 +16,4 @@ jobs:
     - name: Build with dotnet
       run: dotnet build --configuration Release
     - name: Test with xunit
-      run: dotnet test .\test\SecureStore.Contrib.Configuration.Tests
+      run: dotnet test ./test/SecureStore.Contrib.Configuration.Tests
