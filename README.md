@@ -2,6 +2,8 @@
 
 A [SecureStore](https://github.com/neosmart/SecureStore) configuration provider to use with .NET Core's `Microsoft.Extensions.Configuration`.
 
+![build](https://github.com/gowon/SecureStore.Contrib.Configuration/workflows/build/badge.svg)
+
 ### Installing 
 
 Install using the [SecureStore.Contrib.Configuration package](https://www.nuget.org/packages/SecureStore.Contrib.Configuration):
