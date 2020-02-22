@@ -1,4 +1,4 @@
-name: .NET Core
+name: build
 
 on: [push]
 
@@ -15,3 +15,5 @@ jobs:
         dotnet-version: 3.1.100
     - name: Build with dotnet
       run: dotnet build --configuration Release
+    - name: Test with xunit
+      run: dotnet test .\test\SecureStore.Contrib.Configuration.Tests
