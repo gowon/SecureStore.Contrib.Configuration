@@ -2,23 +2,16 @@
 
 A [SecureStore](https://github.com/neosmart/SecureStore) configuration provider to use with .NET Core's `Microsoft.Extensions.Configuration`.
 
+[![Nuget (with prereleases)](https://img.shields.io/nuget/vpre/SecureStore.Contrib.Configuration?color=blue)](https://www.nuget.org/packages/SecureStore.Contrib.Configuration)
 ![build](https://github.com/gowon/SecureStore.Contrib.Configuration/workflows/build/badge.svg)
 
-### Installing 
-
-Install using the [SecureStore.Contrib.Configuration package](https://www.nuget.org/packages/SecureStore.Contrib.Configuration):
+## Installing via NuGet
 
 `Install-Package SecureStore.Contrib.Configuration`
 
 or `dotnet add package SecureStore.Contrib.Configuration`
 
-### Usage 
-
-When you install the package, it should be added to your _csproj_ file. Alternatively, you can add it directly by adding:
-
-```xml
-<PackageReference Include="SecureStore.Contrib.Configuration" Version="1.0.0" />
-```
+## Usage 
 
 To load a SecureStore file as part of your config, just load it as part of your normal `ConfigurationBuilder` setup in the `Program` class of your .NET Core app. 
 
