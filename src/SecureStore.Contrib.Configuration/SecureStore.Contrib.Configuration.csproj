@@ -4,26 +4,34 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <LangVersion>latest</LangVersion>
     <NoWarn>$(NoWarn);1591</NoWarn>
-    <PackageProjectUrl>https://github.com/gowon/SecureStore.Extensions.Configuration</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/gowon/SecureStore.Extensions.Configuration</RepositoryUrl>
-    <RepositoryType>git</RepositoryType>
-    <PackageTags>securestore configuration secrets json</PackageTags>
-    <Copyright>Copyright ©  2020 Gowon Patterson</Copyright>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Description>A SecureStore configuration provider to use with Microsoft.Extensions.Configuration.</Description>
-    <AssemblyVersion>0.1.0.0</AssemblyVersion>
-    <FileVersion>0.1.0.0</FileVersion>
+    <Version>1.0.0-alpha</Version>
     <Authors>Gowon Patterson</Authors>
-    <Version>0.1.0</Version>
+    <Description>A SecureStore configuration provider to use with Microsoft.Extensions.Configuration.</Description>
+    <Copyright>© Gowon Patterson. All rights reserved.</Copyright>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
+  </PropertyGroup>
+
+  <PropertyGroup Label="NuspecProperties">
+    <NeutralLanguage>en-US</NeutralLanguage>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://github.com/gowon/SecureStore.Contrib.Configuration</RepositoryUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageTags>securestore extensions configuration secrets json</PackageTags>
+    <PackageProjectUrl>https://github.com/gowon/SecureStore.Contrib.Configuration</PackageProjectUrl>
+  </PropertyGroup>
+
+  <PropertyGroup Label="SourceLink">
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
-    <EmbedUntrackedSources>true</EmbedUntrackedSources>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>
 
+  <ItemGroup Label="SourceLink">
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
+  </ItemGroup>
+
   <ItemGroup>
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All"/>
     <PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="2.0.0" />
     <PackageReference Include="SecureStore" Version="1.0.0" />
   </ItemGroup>
