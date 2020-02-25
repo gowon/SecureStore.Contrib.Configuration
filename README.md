@@ -1,9 +1,10 @@
 # SecureStore.Contrib.Configuration
 
-A [SecureStore](https://github.com/neosmart/SecureStore) configuration provider to use with .NET Core's `Microsoft.Extensions.Configuration`.
-
 [![Nuget (with prereleases)](https://img.shields.io/nuget/vpre/SecureStore.Contrib.Configuration?color=blue)](https://www.nuget.org/packages/SecureStore.Contrib.Configuration)
 ![build](https://github.com/gowon/SecureStore.Contrib.Configuration/workflows/build/badge.svg)
+[![codecov](https://codecov.io/gh/gowon/SecureStore.Contrib.Configuration/branch/master/graph/badge.svg)](https://codecov.io/gh/gowon/SecureStore.Contrib.Configuration)
+
+A [SecureStore](https://github.com/neosmart/SecureStore) configuration provider to use with .NET Core's `Microsoft.Extensions.Configuration`.
 
 ## Installing via NuGet
 

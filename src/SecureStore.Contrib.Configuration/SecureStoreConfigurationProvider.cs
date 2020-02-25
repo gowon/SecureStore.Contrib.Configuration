@@ -27,7 +27,7 @@
                         manager.LoadKeyFromPassword(source.Key);
                         break;
                     default:
-                        throw new ArgumentOutOfRangeException();
+                        throw new ArgumentOutOfRangeException(nameof(source.KeyType));
                 }
 
                 foreach (var key in manager.Keys)

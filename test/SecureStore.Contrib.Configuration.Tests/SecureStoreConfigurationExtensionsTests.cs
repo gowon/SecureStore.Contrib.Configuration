@@ -7,6 +7,19 @@ namespace SecureStore.Contrib.Configuration.Tests
 
     public class SecureStoreConfigurationExtensionsTests
     {
+        [Fact]
+        public void AddSecureStoreFile_ThrowsIfBuilderIsNull()
+        {
+            // Arrange
+            var path = "does-not-exist.json";
+            var key = "password";
+
+            // Act and Assert
+            var ex = Assert.Throws<ArgumentNullException>(() =>
+                SecureStoreConfigurationExtensions.AddSecureStoreFile(null, path, key, KeyType.Password).Build());
+            Assert.StartsWith("builder", ex.ParamName);
+        }
+
         [Theory]
         [InlineData(null)]
         [InlineData("")]
@@ -36,7 +49,7 @@ namespace SecureStore.Contrib.Configuration.Tests
             var ex = Assert.Throws<ArgumentException>(() =>
                 configurationBuilder.AddSecureStoreFile(path, key, KeyType.Password));
             Assert.Equal("key", ex.ParamName);
-            Assert.StartsWith("File path must be a non-empty string.", ex.Message);
+            Assert.StartsWith("File key/path must be a non-empty string.", ex.Message);
         }
 
         [Fact]
@@ -64,6 +77,9 @@ namespace SecureStore.Contrib.Configuration.Tests
             var ex = Assert.Throws<FileNotFoundException>(() =>
                 new ConfigurationBuilder().AddSecureStoreFile(path, keyPath, KeyType.File).Build());
             Assert.StartsWith($"Could not find file ", ex.Message);
+
+            // Cleanup
+            File.Delete(path);
         }
     }
 }

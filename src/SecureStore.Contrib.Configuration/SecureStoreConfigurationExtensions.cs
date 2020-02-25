@@ -10,13 +10,13 @@
         public static IConfigurationBuilder AddSecureStoreFile(this IConfigurationBuilder builder, string path,
             string key, KeyType keyType)
         {
-            return AddSecureStoreFile(builder, null, path, key, keyType, false, false);
+            return AddSecureStoreFile(builder, path, key, keyType, false);
         }
 
         public static IConfigurationBuilder AddSecureStoreFile(this IConfigurationBuilder builder, string path,
             string key, KeyType keyType, bool optional)
         {
-            return AddSecureStoreFile(builder, null, path, key, keyType, optional, false);
+            return AddSecureStoreFile(builder, path, key, keyType, optional, false);
         }
 
         public static IConfigurationBuilder AddSecureStoreFile(this IConfigurationBuilder builder, string path,
@@ -42,7 +42,7 @@
 
             if (string.IsNullOrEmpty(key))
             {
-                throw new ArgumentException("File path must be a non-empty string.", nameof(key));
+                throw new ArgumentException("File key/path must be a non-empty string.", nameof(key));
             }
 
             if (provider == null && Path.IsPathRooted(path))
