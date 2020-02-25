@@ -15,5 +15,11 @@ jobs:
         dotnet-version: 3.1.100
     - name: Build with dotnet
       run: dotnet build --configuration Release
-    - name: Test with xunit
-      run: dotnet test ./test/SecureStore.Contrib.Configuration.Tests
+    - name: Generate coverage report
+      run: dotnet test --collect "XPlat Code Coverage" --results-directory "./test-results"
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v1
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
+        file: ./test-results/*.xml
+        flags: unittests
