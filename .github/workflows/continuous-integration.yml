@@ -8,15 +8,21 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    
     - uses: actions/checkout@v2
+    
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 3.1.100
-    - name: Build with dotnet
+        dotnet-version: '3.1.x'
+
+    - name: Build solution
       run: dotnet build --configuration Release
+      
     - name: Generate coverage report
-      run: dotnet test --collect "XPlat Code Coverage" --results-directory "./test-results"
+      run: dotnet test --collect "XPlat Code Coverage" --results-directory "./test-results" --configuration Release  --no-restore  --verbosity normal
+      continue-on-error: true
+      
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v1
       with:
