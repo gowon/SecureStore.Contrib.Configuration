@@ -1,17 +1,17 @@
 ﻿namespace SecureStore.Contrib.Configuration
 {
     /// <summary>
-    /// SecureStore key types.
+    ///     SecureStore key types.
     /// </summary>
     public enum KeyType
     {
         /// <summary>
-        /// File key.
+        ///     File key.
         /// </summary>
         File,
 
         /// <summary>
-        /// Password key.
+        ///     Password key.
         /// </summary>
         Password
     }
