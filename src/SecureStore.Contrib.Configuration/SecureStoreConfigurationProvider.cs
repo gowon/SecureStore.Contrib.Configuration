@@ -48,7 +48,10 @@
                             throw new FileNotFoundException(error.ToString());
                         }
 
-                        manager.LoadKeyFromFile(file.PhysicalPath);
+                        using (var keyStream = file.CreateReadStream())
+                        {
+                            manager.LoadKeyFromStream(keyStream);
+                        }
                         break;
                     case KeyType.Password:
                         manager.LoadKeyFromPassword(source.Key);

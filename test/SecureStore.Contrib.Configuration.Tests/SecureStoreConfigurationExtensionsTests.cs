@@ -76,7 +76,7 @@ namespace SecureStore.Contrib.Configuration.Tests
             // Act and Assert
             var ex = Assert.Throws<FileNotFoundException>(() =>
                 new ConfigurationBuilder().AddSecureStoreFile(path, keyPath, KeyType.File).Build());
-            Assert.StartsWith($"Could not find file ", ex.Message);
+            Assert.StartsWith($"The configuration key file '{keyPath}' was not found", ex.Message);
 
             // Cleanup
             File.Delete(path);

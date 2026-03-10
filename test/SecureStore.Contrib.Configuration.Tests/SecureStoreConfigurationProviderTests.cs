@@ -1,3 +1,5 @@
+using Microsoft.Extensions.FileProviders;
+
 namespace SecureStore.Contrib.Configuration.Tests
 {
     using System;
@@ -6,9 +8,11 @@ namespace SecureStore.Contrib.Configuration.Tests
     using NeoSmart.SecureStore;
     using Xunit;
 
-    public class SecureStoreConfigurationProviderTests
+    public class SecureStoreConfigurationProviderTests : IDisposable
     {
-        private static string Password => "P@$$w0rD!";
+        private static readonly string EmbeddedKeyName = "embedded.key";
+        private static readonly string Password = "P@$$w0rD!";
+        private readonly string _storePath;
 
         private static readonly Dictionary<string, string> SecureData = new Dictionary<string, string>
         {
@@ -17,58 +21,68 @@ namespace SecureStore.Contrib.Configuration.Tests
             {"foo3", "bar3"}
         };
 
-        private void CreateTestStore(string storePath, string key, KeyType type)
+        public SecureStoreConfigurationProviderTests()
         {
-            using (var sman = SecretsManager.CreateStore())
-            {
-                if (type == KeyType.Password)
-                {
-                    sman.LoadKeyFromPassword(key);
-                }
-                else
-                {
-                    sman.GenerateKey();
-                }
+            _storePath = Path.GetTempFileName();
+        }
 
-                foreach (var secretKey in SecureData.Keys)
-                {
-                    sman.Set(secretKey, SecureData[secretKey]);
-                }
-
-                sman.SaveStore(storePath);
-                sman.ExportKey(key);
-            }
+        public void Dispose()
+        {
+            File.Delete(_storePath);
         }
 
         [Fact]
         public void LoadStreamUsingKeyFile()
         {
-            var storePath = Path.GetTempFileName();
             var keyPath = Path.GetTempFileName();
-
-            CreateTestStore(storePath, keyPath, KeyType.File);
-
-            var provider = new SecureStoreConfigurationProvider(new SecureStoreConfigurationSource
+            CreateTestStore(_storePath, keyPath, KeyType.File);
+            var configurationSource = new SecureStoreConfigurationSource
             {
                 KeyType = KeyType.File,
                 Key = keyPath,
                 Optional = true
-            });
+            };
+            configurationSource.ResolveKeyFileProvider();
+            var provider = new SecureStoreConfigurationProvider(configurationSource);
 
-            using (var stream = new FileStream(storePath, FileMode.Open, FileAccess.Read))
+            using (var stream = new FileStream(_storePath, FileMode.Open, FileAccess.Read))
             {
                 provider.Load(stream);
             }
 
-            File.Delete(storePath);
+            Assert.All(SecureData, item => Assert.Equal(provider.Get(item.Key), item.Value));
             File.Delete(keyPath);
+        }
+
+        [Fact]
+        public void LoadStreamUsingEmbeddedKeyFile()
+        {
+            var assembly = typeof(SecureStoreConfigurationProviderTests).Assembly;
+            var names = assembly.GetManifestResourceNames();
+            using (var key = assembly.GetManifestResourceStream($"{assembly.GetName().Name}.{EmbeddedKeyName}")!)
+            {
+                CreateTestStore(_storePath, key);
+            }
+            var provider = new SecureStoreConfigurationProvider(new SecureStoreConfigurationSource
+            {
+                KeyFileProvider = new ManifestEmbeddedFileProvider(assembly),
+                KeyType = KeyType.File,
+                Key = EmbeddedKeyName,
+                Optional = true
+            });
+
+            using (var stream = new FileStream(_storePath, FileMode.Open, FileAccess.Read))
+            {
+                provider.Load(stream);
+            }
+
+            Assert.All(SecureData, item => Assert.Equal(provider.Get(item.Key), item.Value));
         }
 
         [Fact]
         public void LoadStreamUsingPassword()
         {
-            var storePath = Path.GetTempFileName();
-            CreateTestStore(storePath, Password, KeyType.Password);
+            CreateTestStore(_storePath, Password, KeyType.Password);
 
             var provider = new SecureStoreConfigurationProvider(new SecureStoreConfigurationSource
             {
@@ -77,36 +91,67 @@ namespace SecureStore.Contrib.Configuration.Tests
                 Optional = true
             });
 
-            using (var stream = new FileStream(storePath, FileMode.Open, FileAccess.Read))
+            using (var stream = new FileStream(_storePath, FileMode.Open, FileAccess.Read))
             {
                 provider.Load(stream);
             }
 
-            File.Delete(storePath);
+            Assert.All(SecureData, item => Assert.Equal(provider.Get(item.Key), item.Value));
         }
 
         [Fact]
         public void LoadStreamUsingPassword_ThrowsIfKeyTypeNotInRange()
         {
-            var storePath = Path.GetTempFileName();
-            CreateTestStore(storePath, Password, KeyType.Password);
+            CreateTestStore(_storePath, Password, KeyType.Password);
 
             var source = new SecureStoreConfigurationSource
             {
-                KeyType = (KeyType) 3,
+                KeyType = (KeyType)3,
                 Key = Password,
                 Optional = true
             };
             var provider = new SecureStoreConfigurationProvider(source);
 
-            using (var stream = new FileStream(storePath, FileMode.Open, FileAccess.Read))
+            using (var stream = new FileStream(_storePath, FileMode.Open, FileAccess.Read))
             {
                 var ex = Assert.Throws<ArgumentOutOfRangeException>(() =>
                     provider.Load(stream));
                 Assert.Equal(nameof(source.KeyType), ex.ParamName);
             }
+        }
 
-            File.Delete(storePath);
+        private void CreateTestStore(string storePath, string key, KeyType type)
+        {
+            using var sman = SecretsManager.CreateStore();
+            if (type == KeyType.Password)
+            {
+                sman.LoadKeyFromPassword(key);
+            }
+            else
+            {
+                sman.GenerateKey();
+            }
+
+            foreach (var secretKey in SecureData.Keys)
+            {
+                sman.Set(secretKey, SecureData[secretKey]);
+            }
+
+            sman.SaveStore(storePath);
+            sman.ExportKey(key);
+        }
+
+        private void CreateTestStore(string storePath, Stream key)
+        {
+            using var sman = SecretsManager.CreateStore();
+            sman.LoadKeyFromStream(key);
+
+            foreach (var secretKey in SecureData.Keys)
+            {
+                sman.Set(secretKey, SecureData[secretKey]);
+            }
+
+            sman.SaveStore(storePath);
         }
     }
 }
